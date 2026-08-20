@@ -1,5 +1,11 @@
 name: Deploy to GitHub Pages
 
+# Grant the workflow permission to push to the repository (gh-pages branch)
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 on:
   push:
     branches: [ main ]
@@ -11,6 +17,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # persist credentials so later steps (deploy) can push using GITHUB_TOKEN
+          persist-credentials: true
 
       - name: Use Node.js
         uses: actions/setup-node@v4
