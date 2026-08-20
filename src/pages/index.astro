@@ -1,17 +1,402 @@
 ---
+import { projects } from "../data/projects";
+import ProjectCard from "../components/ProjectCard.astro";
 
+// Group projects by category
+const grouped = projects.reduce((acc, p) => {
+  acc[p.category] ||= [];
+  acc[p.category].push(p);
+  return acc;
+}, {});
+
+// Short descriptions for each category
+const categoryDescriptions: { [k: string]: string } = {
+  "Dimensionality Reduction": "Dimensionality reduction project to transform high‑dimensional data into compact, informative representations for analysis and visualization.",
+  "Fundamental Deep Learning": "Deep learning projects built from‑scratch using NumPy, covering foundational architectures and training methods across feedforward, convolutional, recurrent, and generative models.",
+  "Fundamental Machine Learning": "From‑scratch implementations of core supervised learning algorithms illustrating foundational concepts in classical machine learning.",
+  "Natural Language Processing": "NLP projects exploring how language can be modeled, generated, and organized using probabilistic methods and neural sequence models.",
+  "Probabilistic Machine Learning": "Probabilistic modeling projects focused on Bayesian inference, variational methods, and uncertainty‑aware latent representations.",
+  "Computer Vision": "Computer vision projects exploring how visual information is extracted, transformed, and interpreted across classical methods, geometric modeling, and modern deep learning."
+};
+
+// Desired display order for categories
+const categoryOrder = [
+  "Natural Language Processing",
+  "Computer Vision",
+  "Fundamental Machine Learning",
+  "Probabilistic Machine Learning",
+  "Fundamental Deep Learning",
+  "Dimensionality Reduction"
+];
+
+// Desired project ordering within specific categories (titles must match exactly)
+const projectOrder: { [k: string]: string[] } = {
+  "Natural Language Processing": [
+    "Poetry Generator: Comparative Analysis of Neural Architectures",
+    "Embedded Topic Model for Document Analysis"
+  ],
+  "Computer Vision": [
+    "CNN Architectures for Image Classification: From VGG to ConvNeXt",
+    "Video Reconstruction with CLIP, HDBSCAN and TSP Optimization",
+    "Image Matching & 3D Reconstruction",
+    "Edge Detection and Hough Transform",
+    "Filtering Operations"
+  ],
+  "Probabilistic Machine Learning": [
+    "Variational Autoencoder (VAE) for MNIST Latent Representation and Image Generation",
+    "Stochastic Variational Inference for Latent Dirichlet Allocation (LDA)",
+    "Coordinate Ascent Variational Inference (CAVI)",
+    "Reparameterization of Common Distributions"
+  ],
+  "Fundamental Machine Learning": [
+    "Supervised Classification Challenge",
+    "Bayesian Classification and Boosting",
+    "Support Vector Machine Classifier",
+    "Decision Tree Learning on the MONK Datasets"
+  ],
+  "Fundamental Deep Learning": [
+    "Deep Belief Networks (DBNs) with Restricted Boltzmann Machines",
+    "Character-Level Language Modeling with a Recurrent Neural Network",
+    "Image Classification with a Convolutional Neural Network",
+    "Hopfield Networks for Associative Memory",
+    "Multi-Layer Perceptrons for Classification and Function Approximation",
+    "Image Classification with a 1-Layer Neural Network",
+    "Image Classification with a 2-Layer Neural Network"
+  ],
+  "Dimensionality Reduction": [
+    "Dimensionality Reduction for Political Voting Data"
+  ]
+};
+
+// Build ordered category entries: categories in categoryOrder first, then any remaining categories
+const orderedCategoryEntries = (() => {
+  const remaining = Object.keys(grouped).filter(c => !categoryOrder.includes(c));
+  const all = [...categoryOrder, ...remaining];
+  return all.map(cat => [cat, grouped[cat] || []]);
+})();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Clément Corbeau–Izorche — Portfolio</title>
+  </head>
+
+  <body>
+    <main>
+
+      <!-- HEADER SECTION -->
+      <section class="header">
+        <div class="header-center">
+          <img src="/images/me.jpg" alt="Photo de Clément" class="profile-pic center-pic" />
+
+          <h1 class="main-title">Clément Corbeau–Izorche - Portfolio</h1>
+
+          <div class="header-socials">
+            <a href="https://github.com/ClementCI" target="_blank" class="social-link" rel="noopener noreferrer" aria-label="GitHub profile">
+              <img src="/images/github_icon.png" alt="GitHub" />
+            </a>
+
+            <a href="https://www.linkedin.com/in/clément-corbeau-izorche-9453441ab/" target="_blank" class="social-link" rel="noopener noreferrer" aria-label="LinkedIn profile">
+              <img src="/images/linkedin_icon.png" alt="LinkedIn" />
+            </a>
+          </div>
+
+          <p class="intro centered-intro">
+            I am an early‑career AI Engineer trained through a double degree at École Centrale de Lyon and KTH Royal Institute of Technology. Welcome to my portfolio, which showcases a selection of AI projects developed through academic research and personal exploration. Each project highlights a different facet of contemporary machine learning, from foundational algorithms to deep probabilistic models and modern neural architectures. All implementations are original and emphasize conceptual clarity, practical experimentation, and reproducibility.
+          </p>
+        </div>
+      </section>
+
+      <!-- TOP CATEGORY MENU -->
+      <nav class="category-menu" aria-label="Project categories">
+        <button data-cat="all" class="menu-btn active">All</button>
+        {orderedCategoryEntries.map(([cat]) => (
+          <button data-cat={cat} class="menu-btn">{cat}</button>
+        ))}
+      </nav>
+
+      <!-- FILTER BAR -->
+      <div class="filters">
+        <select id="tagFilter" aria-label="Filter by tag">
+          <option value="all">All tags</option>
+          {Array.from(new Set(projects.flatMap(p => p.tags))).map(tag => (
+            <option value={tag}>{tag}</option>
+          ))}
+        </select>
+
+        <!-- search input moved here so intro can use full width -->
+        <input id="search" type="search" placeholder="Search projects…" aria-label="Search projects" />
+      </div>
+
+      <!-- PROJECT SECTIONS (ordered) -->
+      {orderedCategoryEntries.map(([category, items]) => (
+        <>
+          <h2 class="category-title" data-category-title={category}>{category}</h2>
+          <p class="category-desc">{categoryDescriptions[category] ?? ''}</p>
+          <div class="grid">
+            {(projectOrder[category] ? items.slice().sort((a,b)=>{
+              const ia = projectOrder[category].indexOf(a.title);
+              const ib = projectOrder[category].indexOf(b.title);
+              return (ia === -1 ? Number.MAX_SAFE_INTEGER : ia) - (ib === -1 ? Number.MAX_SAFE_INTEGER : ib);
+            }) : items).map(project => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+        </>
+      ))}
+    </main>
+
+    <!-- FILTER LOGIC -->
+    <script is:inline>
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const titles = document.querySelectorAll("[data-category-title]");
+      const tagSelect = document.getElementById("tagFilter");
+      const menuButtons = document.querySelectorAll(".menu-btn");
+      const searchInput = document.getElementById("search");
+
+      let selectedCategory = "all";
+
+      function applyFilters() {
+        const tag = tagSelect.value;
+        const query = (searchInput.value || "").trim().toLowerCase();
+
+        cards.forEach(card => {
+          const cardCategory = card.dataset.category;
+          const cardTags = card.dataset.tags ? card.dataset.tags.split(",") : [];
+
+          const titleText = (card.querySelector('.title')?.textContent || '');
+          const summaryText = (card.querySelector('.summary')?.textContent || '');
+          const combined = (titleText + ' ' + summaryText).toLowerCase();
+
+          const categoryMatch = selectedCategory === "all" || cardCategory === selectedCategory;
+          const tagMatch = tag === "all" || cardTags.includes(tag);
+          const textMatch = !query || combined.includes(query);
+
+          card.style.display = categoryMatch && tagMatch && textMatch ? "block" : "none";
+        });
+
+        titles.forEach(title => {
+          const titleCategory = title.dataset.categoryTitle;
+          // If any card in this category is visible, show the title
+          const anyVisible = cards.some(c => c.dataset.category === titleCategory && c.style.display !== 'none');
+          title.style.display = anyVisible ? 'block' : 'none';
+        });
+      }
+
+      // Category menu click
+      menuButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          selectedCategory = btn.dataset.cat;
+
+          // Update active button
+          menuButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          applyFilters();
+        });
+      });
+
+      // Tag filter change
+      tagSelect.addEventListener("change", applyFilters);
+
+      // Search input (debounced)
+      let searchTimer;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(applyFilters, 150);
+      });
+
+      // initial
+      applyFilters();
+    </script>
+
+    <style>
+      :root {
+        --bg: #0b0b0f;
+        --muted: #cfcfcf;
+        --accent-1: #6ea8ff;
+        --accent-2: #b18cff;
+      }
+
+      body {
+        background: var(--bg);
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        margin: 0;
+        padding: 2rem;
+        color: #eaeaea;
+      }
+
+      /* HEADER SECTION */
+      .header {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2.25rem;
+        padding-top: 1rem;
+      }
+
+      .header-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.6rem;
+        max-width: 900px;
+        width: 100%;
+      }
+
+      .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--accent-2);
+        box-shadow: 0 12px 36px rgba(139, 92, 246, 0.08);
+      }
+
+      .center-pic { margin: 0 0 1rem 0; }
+
+      .header-text { display: none; } /* old layout removed; kept hidden in case other code references it */
+
+      .main-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin: 0.4rem 0 0.35rem 0;
+        background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: var(--accent-1); /* readable fallback */
+        display: block;
+      }
+
+      @supports (-webkit-background-clip: text) {
+        .main-title {
+          -webkit-text-fill-color: transparent;
+        }
+      }
+
+      .intro {
+        color: var(--muted);
+        font-size: 0.98rem;
+        line-height: 1.6;
+        margin: 0 auto 0.6rem auto;
+        max-width: 86ch; /* keep intro readable while centered */
+      }
+
+      .centered-intro { text-align: center; }
+
+      .filters {
+        margin-bottom: 1.6rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .filters select {
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.02);
+        color: #eaeaea;
+        border: 1px solid rgba(255,255,255,0.04);
+        appearance: none;
+      }
+
+      .filters input[type="search"] {
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.02);
+        color: #eaeaea;
+        border: 1px solid rgba(255,255,255,0.04);
+        min-width: 220px;
+        outline: none;
+        transition: box-shadow 160ms ease, border-color 160ms ease;
+      }
+
+      .filters input[type="search"]:focus {
+        box-shadow: 0 6px 20px rgba(110,168,255,0.06);
+        border-color: rgba(110,168,255,0.28);
+      }
+
+      /* try to force dark options for the native select dropdown */
+      .filters option {
+        background: #0b0b0f;
+        color: #eaeaea;
+      }
+
+      .header-socials {
+        display: flex;
+        flex-direction: row; /* icons in a row, centered */
+        gap: 1.2rem; /* slightly larger gap between icons */
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.6rem;
+        margin-bottom: 0.9rem; /* create clearer separation from the intro text */
+      }
+
+      .socials {
+        display: flex;
+        gap: 0.6rem;
+        margin-top: 0.45rem;
+      }
+
+      .social-link {
+        display: inline-grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.04);
+        transition: background 160ms ease, transform 160ms ease;
+      }
+
+      .social-link img { width: 20px; height: 20px; }
+
+      .social-link:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(110,168,255,0.04); }
+
+      @media (max-width: 720px) {
+        .header-socials { order: 4; width: 100%; justify-content: flex-start; margin-top: 0.6rem; }
+      }
+
+      .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+      /* CATEGORY MENU */
+      .category-menu { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+
+      .menu-btn {
+        background: transparent;
+        color: #e6e7ef;
+        border: 1px solid rgba(255,255,255,0.03);
+        padding: 0.45rem 0.85rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: background 160ms ease, transform 160ms ease, color 160ms ease;
+      }
+
+      .menu-btn.active { background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); color: white; border-color: transparent; }
+
+      /* FILTER BAR */
+      .filters { margin-bottom: 1.6rem; }
+
+      .filters select { padding: 0.5rem 0.8rem; border-radius: 8px; background: rgba(255,255,255,0.02); color: #eaeaea; border: 1px solid rgba(255,255,255,0.04); }
+
+      /* CATEGORY TITLES */
+      .category-title { margin-top: 2.25rem; margin-bottom: 0.35rem; font-size: 1.1rem; font-weight: 600; color: #d6d8ff; opacity: 0.95; }
+
+      .category-desc { margin: 0 0 1rem 0; color: var(--muted); font-size: 0.95rem; max-width: none; width: 100%; line-height: 1.45; }
+
+      /* GRID */
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+
+      @media (max-width: 720px) {
+        /* allow stacking on small screens */
+        .header { flex-wrap: wrap; }
+        .header-socials { order: 4; width: 100%; justify-content: flex-start; margin-top: 0.6rem; }
+        .header-text { order: 2; width: 100%; }
+        #search { max-width: 100%; }
+      }
+    </style>
+  </body>
 </html>

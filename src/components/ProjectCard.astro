@@ -1,0 +1,155 @@
+---
+import type { Project } from "../data/projects";
+const { project } = Astro.props;
+---
+
+<article
+  class="card"
+  aria-label={project.title}
+  data-category={project.category}
+  data-tags={project.tags.join(",")}
+>
+  <div class="content">
+    <header class="card-head">
+      <h3 class="title">{project.title}</h3>
+      <!-- category kept as data attribute for filtering but not displayed -->
+    </header>
+
+    <p class="summary">{project.description}</p>
+
+    <div class="meta">
+      <div class="tags">
+        {project.tags.map(tag => <span class="tag">{tag}</span>)}
+      </div>
+
+      <a href={project.repo} target="_blank" rel="noopener noreferrer" class="repo-btn" aria-label={`Open ${project.title} repository`}>
+        <span class="repo-text">Go to the repo</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d="M14 3h7v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 14L21 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 21H3V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  :root {
+    --bg: #0b0b0f;
+    --card: #0f0f13;
+    --muted: #bfc7d9;
+    --accent-1: #6ea8ff;
+    --accent-2: #b18cff;
+    --accent: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    /* allow content to determine height so descriptions are not clipped */
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 1rem;
+    transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms ease;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 36px rgba(11,11,15,0.65);
+  }
+
+
+  .content {
+    padding: 0 0.2rem 0.4rem 0.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .card-head {
+    display: block; /* single column: title uses full width */
+  }
+
+  .title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    /* preserve gradient-looking accent while staying readable */
+    background: var(--accent);
+    -webkit-background-clip: text;
+    color: transparent;
+    line-height: 1.2;
+    width: 100%;
+  }
+
+  .summary {
+    margin: 0;
+    color: #d6d8de;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    /* allow full content to show by default */
+    max-height: none;
+    overflow: visible;
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    /* ensure tags use available space but don't overlap the repo button */
+    flex: 1 1 auto;
+    z-index: 1;
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    padding: 6px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.02);
+  }
+
+  .repo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    color: white;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    border: none;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+    /* make sure the button sits above nearby elements and is fully clickable */
+    z-index: 2;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .repo-btn svg { opacity: 0.95; pointer-events: none; }
+
+  .repo-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(110,168,255,0.12);
+  }
+
+  /* small responsive tweak */
+  @media (max-width: 420px) {
+    .media img { height: 130px; }
+    .repo-btn { padding: 7px 8px; font-size: 0.82rem; }
+  }
+</style>
