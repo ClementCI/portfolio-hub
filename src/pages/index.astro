@@ -136,7 +136,7 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
       {orderedCategoryEntries.map(([category, items]) => (
         <>
           <h2 class="category-title" data-category-title={category}>{category}</h2>
-          <p class="category-desc">{categoryDescriptions[category] ?? ''}</p>
+          <p class="category-desc" data-category-desc={category}>{categoryDescriptions[category] ?? ''}</p>
           <div class="grid">
             {(projectOrder[category] ? items.slice().sort((a,b)=>{
               const ia = projectOrder[category].indexOf(a.title);
@@ -154,6 +154,7 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
     <script is:inline>
       const cards = Array.from(document.querySelectorAll(".card"));
       const titles = document.querySelectorAll("[data-category-title]");
+      const descriptions = document.querySelectorAll("[data-category-desc]");
       const tagSelect = document.getElementById("tagFilter");
       const menuButtons = document.querySelectorAll(".menu-btn");
       const searchInput = document.getElementById("search");
@@ -184,6 +185,12 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
           // If any card in this category is visible, show the title
           const anyVisible = cards.some(c => c.dataset.category === titleCategory && c.style.display !== 'none');
           title.style.display = anyVisible ? 'block' : 'none';
+        });
+
+        descriptions.forEach(desc => {
+          const descCategory = desc.dataset.categoryDesc;
+          const anyVisible = cards.some(c => c.dataset.category === descCategory && c.style.display !== 'none');
+          desc.style.display = anyVisible ? 'block' : 'none';
         });
       }
 
