@@ -74,6 +74,8 @@ const orderedCategoryEntries = (() => {
   const all = [...categoryOrder, ...remaining];
   return all.map(cat => [cat, grouped[cat] || []]);
 })();
+
+const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 ---
 
 <html lang="fr">
@@ -89,17 +91,17 @@ const orderedCategoryEntries = (() => {
       <!-- HEADER SECTION -->
       <section class="header">
         <div class="header-center">
-          <img src="/images/me.jpg" alt="Photo de Clément" class="profile-pic center-pic" />
+          <img src={withBase("images/me.jpg")} alt="Photo de Clément" class="profile-pic center-pic" />
 
           <h1 class="main-title">Clément Corbeau–Izorche - Portfolio</h1>
 
           <div class="header-socials">
             <a href="https://github.com/ClementCI" target="_blank" class="social-link" rel="noopener noreferrer" aria-label="GitHub profile">
-              <img src="/images/github_icon.png" alt="GitHub" />
+              <img src={withBase("images/github_icon.png")} alt="GitHub" />
             </a>
 
             <a href="https://www.linkedin.com/in/clément-corbeau-izorche-9453441ab/" target="_blank" class="social-link" rel="noopener noreferrer" aria-label="LinkedIn profile">
-              <img src="/images/linkedin_icon.png" alt="LinkedIn" />
+              <img src={withBase("images/linkedin_icon.png")} alt="LinkedIn" />
             </a>
           </div>
 
