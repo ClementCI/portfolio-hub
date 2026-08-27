@@ -8,6 +8,24 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  // LLM Systems
+  {
+    title: "LLM Experiment Lab",
+    description: "Production‑grade platform for benchmarking LLM configurations across models, prompts, providers, cost, latency, and quality, using deterministic evaluators and LLM judges to run parallel experiments, score outputs, analyze failures, and recommend the best configuration under explicit constraints.",
+    tags: [
+    "LLM Benchmarking",
+    "GenAI APIs",
+    "LLM Judge",
+    "LangGraph",
+    "FastAPI",
+    "PostgreSQL",
+    "Docker"
+    ],
+    repo: "https://github.com/ClementCI/llm-experiment-lab",
+    image: "/images/dim_red.png",
+    category: "LLM Systems"
+  },
+
   // Dimensionality Reduction
   {
     title: "Dimensionality Reduction for Political Voting Data",

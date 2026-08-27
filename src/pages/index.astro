@@ -11,7 +11,8 @@ const grouped = projects.reduce((acc, p) => {
 
 // Short descriptions for each category
 const categoryDescriptions: { [k: string]: string } = {
-  "Dimensionality Reduction": "Dimensionality reduction project to transform high‑dimensional data into compact, informative representations for analysis and visualization.",
+  "LLM Systems": "LLM systems projects exploring how large‑language‑model applications are built, orchestrated, and evaluated across providers and configurations.",
+  "Dimensionality Reduction": "Dimensionality reduction projects to transform high‑dimensional data into compact, informative representations for analysis and visualization.",
   "Fundamental Deep Learning": "Deep learning projects built from‑scratch using NumPy, covering foundational architectures and training methods across feedforward, convolutional, recurrent, and generative models.",
   "Fundamental Machine Learning": "From‑scratch implementations of core supervised learning algorithms illustrating foundational concepts in classical machine learning.",
   "Natural Language Processing": "NLP projects exploring how language can be modeled, generated, and organized using probabilistic methods and neural sequence models.",
@@ -21,6 +22,7 @@ const categoryDescriptions: { [k: string]: string } = {
 
 // Desired display order for categories
 const categoryOrder = [
+  "LLM Systems",
   "Natural Language Processing",
   "Computer Vision",
   "Fundamental Machine Learning",
@@ -31,6 +33,9 @@ const categoryOrder = [
 
 // Desired project ordering within specific categories (titles must match exactly)
 const projectOrder: { [k: string]: string[] } = {
+  "LLM Systems": [
+    "LLM Experiment Lab"
+  ],
   "Natural Language Processing": [
     "Poetry Generator: Comparative Analysis of Neural Architectures",
     "Embedded Topic Model for Document Analysis"
@@ -106,7 +111,7 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
           </div>
 
           <p class="intro centered-intro">
-            I am an early‑career AI Engineer trained through a double degree at École Centrale de Lyon and KTH Royal Institute of Technology. Welcome to my portfolio, which showcases a selection of AI projects developed through academic research and personal exploration. Each project highlights a different facet of contemporary machine learning, from foundational algorithms to deep probabilistic models and modern neural architectures. All implementations are original and emphasize conceptual clarity, practical experimentation, and reproducibility.
+            I am an early‑career AI Engineer trained through a double degree at École Centrale de Lyon and KTH Royal Institute of Technology. Welcome to my portfolio, which showcases a selection of AI projects developed through academic research and personal exploration. Each project highlights a different facet of contemporary AI, from foundational algorithms to deep probabilistic models and modern neural architectures. All implementations are original and emphasize conceptual clarity, practical experimentation, and reproducibility.
           </p>
         </div>
       </section>
