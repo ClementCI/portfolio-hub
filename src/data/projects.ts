@@ -11,7 +11,7 @@ export const projects: Project[] = [
   // LLM Systems
   {
     title: "LLM Experiment Lab",
-    description: "Production‑grade platform for benchmarking LLM configurations across models, prompts, providers, cost, latency, and quality, using deterministic evaluators and LLM judges to run parallel experiments, score outputs, analyze failures, and recommend the best configuration under explicit constraints.",
+    description: "Production‑grade platform for benchmarking LLM configurations across models, prompts, and providers, evaluated on cost, latency, and quality using deterministic evaluators and LLM judges to run parallel experiments, score outputs, analyze failures, and recommend the best configuration under explicit constraints.",
     tags: [
     "LLM Benchmarking",
     "GenAI APIs",
