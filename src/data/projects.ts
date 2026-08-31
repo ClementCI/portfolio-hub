@@ -19,7 +19,8 @@ export const projects: Project[] = [
     "LangGraph",
     "FastAPI",
     "PostgreSQL",
-    "Docker"
+    "Docker",
+    "Docker Compose"
     ],
     repo: "https://github.com/ClementCI/llm-experiment-lab",
     image: "/images/dim_red.png",
